@@ -1,0 +1,12 @@
+[info]
+title=MO File Viewer
+desc=(Fill the description)
+type=cudatext-plugin
+subdir=cuda_mo_file_viewer
+homepage=(Fill the GitHub repo URL)
+
+[item2]
+section=commands
+caption=MO File Viewer
+method=run
+
