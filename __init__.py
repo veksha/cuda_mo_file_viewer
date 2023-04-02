@@ -44,6 +44,7 @@ class Command:
             'sp_a': 10,
             'w': 450,
             'h': 150,
+            'ex0': True,
         })
 
         n = dlg_proc(self.hdlg, DLG_CTL_ADD, 'memo')
@@ -53,6 +54,7 @@ class Command:
             'sp_a': 10,
             'w': 450,
             'h': 150,
+            'ex0': True,
         })
         
         def onclick(id_dlg, id_ctl, data):
