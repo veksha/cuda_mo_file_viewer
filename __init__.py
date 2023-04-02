@@ -7,7 +7,10 @@ import gettext
 
 class Command:
     
+    dialog_visible = False
+    
     def __init__(self):
+        self.hdlg = None
         self.messages = ''
         self.my_list = []
         
@@ -34,8 +37,17 @@ class Command:
             })
 
     def run(self):
+        if self.dialog_visible:
+            return
+        
         self.hdlg = dlg_proc(0, DLG_CREATE)
-        dlg_proc(self.hdlg, DLG_PROP_SET, prop={'cap': 'MO File Viewer', 'w': 920, 'h': 650, 'border': DBORDER_SIZE})
+        
+        def onclose(*args, **kwargs):
+            self.dialog_visible = False
+            timer_proc(TIMER_START_ONE, lambda *args, **wargs: dlg_proc(self.hdlg, DLG_FREE), 100)
+        
+        dlg_proc(self.hdlg, DLG_PROP_SET, prop={'cap': 'MO File Viewer', 'w': 920, 'h': 650, 'border': DBORDER_SIZE,
+        'on_close': onclose})
         
         n = dlg_proc(self.hdlg, DLG_CTL_ADD, 'memo')
         dlg_proc(self.hdlg, DLG_CTL_PROP_SET, index=n, prop={
@@ -93,6 +105,7 @@ class Command:
             })
         
         dlg_proc(self.hdlg, DLG_SCALE)
-        dlg_proc(self.hdlg, DLG_SHOW_MODAL)
-        dlg_proc(self.hdlg, DLG_FREE)
+        
+        self.dialog_visible = True
+        dlg_proc(self.hdlg, DLG_SHOW_NONMODAL)
 
