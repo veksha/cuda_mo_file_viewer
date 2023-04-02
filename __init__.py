@@ -21,11 +21,11 @@ class Command:
             self.filename = dlg_file(True, '', '', '*.mo|*.mo', 'Please, provide path to .mo file')
             dlg_proc(self.hdlg, DLG_PROP_SET, prop={'cap': CAPTION + ' - ' + self.filename})
             translation = gettext.GNUTranslations(open(self.filename, 'rb'))
-            self.messages = [str(n)+'\r'+msgid+'\r'+translation.gettext(msgid)+'\t' for n, msgid in enumerate(translation._catalog.keys())]
+            self.messages = [str(n)+'\r'+k.replace('\t',chr(3))+'\r'+v.replace('\t',chr(3))+'\t' for n, (k, v) in enumerate(translation._catalog.items())]
             self.messages.insert(0,'Offset\rOriginal\rTranslation\t') # first row is column headers
             self.my_list = list(translation._catalog.items())
         except:
-            print("MO File Viewer: exception occured")
+            print("MO File Viewer: exception occurred")
             
     def fill_data(self):
         dlg_proc(self.hdlg, DLG_CTL_PROP_SET, name='mylistview', prop={
@@ -36,6 +36,8 @@ class Command:
                 '\r'.join(['Translation', '400']),
                 ]),
             })
+        dlg_proc(self.hdlg, DLG_CTL_PROP_SET, name='memo1', prop={'val': ''})
+        dlg_proc(self.hdlg, DLG_CTL_PROP_SET, name='memo2', prop={'val': ''})
 
     def run(self):
         if self.dialog_visible:
@@ -76,8 +78,8 @@ class Command:
             index = data[0]
             selected = data[1]
             if selected:
-                dlg_proc(self.hdlg, DLG_CTL_PROP_SET, name='memo1', prop={'val': str(self.my_list[index][0])})
-                dlg_proc(self.hdlg, DLG_CTL_PROP_SET, name='memo2', prop={'val': str(self.my_list[index][1])})
+                dlg_proc(self.hdlg, DLG_CTL_PROP_SET, name='memo1', prop={'val': self.my_list[index][0].replace('\t',chr(3))})
+                dlg_proc(self.hdlg, DLG_CTL_PROP_SET, name='memo2', prop={'val': self.my_list[index][1].replace('\t',chr(3))})
         
         n = dlg_proc(self.hdlg, DLG_CTL_ADD, 'listview')
         dlg_proc(self.hdlg, DLG_CTL_PROP_SET, index=n, prop={
