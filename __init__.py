@@ -3,6 +3,8 @@ from cudatext import *
 #from cudax_lib import get_translation
 #_   = get_translation(__file__)  # I18N
 
+CAPTION = 'MO File Viewer'
+
 import gettext
 
 class Command:
@@ -19,6 +21,9 @@ class Command:
             #self.filename = 'F:\\MySSDPrograms\\cudatext\\py\\cuda_macros\\lang\\ru_RU\\LC_MESSAGES\\cuda_macros.mo'
             #self.filename = dlg_file(True, '', 'F:\\MySSDPrograms\\cudatext\\py\\cuda_macros\\lang\\ru_RU\\LC_MESSAGES\\', '*.mo|*.mo', 'Please, provide path to .mo file')
             self.filename = dlg_file(True, '', '', '*.mo|*.mo', 'Please, provide path to .mo file')
+            _filename = os.sep.join(self.filename.split(os.sep)[-1:])
+            #_filename = os.sep.join(self.filename.split(os.sep)[-5:])
+            dlg_proc(self.hdlg, DLG_PROP_SET, prop={'cap': CAPTION + ' - ' + _filename})
             translation = gettext.GNUTranslations(open(self.filename, 'rb'))
             self.messages = [str(n)+'\r'+msgid+'\r'+translation.gettext(msgid)+'\t' for n, msgid in enumerate(translation._catalog.keys())]
             self.messages.insert(0,'Offset\rOriginal\rTranslation\t') # first row is column headers
