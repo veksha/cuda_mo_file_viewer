@@ -47,6 +47,8 @@ class Command:
             timer_proc(TIMER_START_ONE, lambda *args, **wargs: dlg_proc(self.hdlg, DLG_FREE), 100)
         
         dlg_proc(self.hdlg, DLG_PROP_SET, prop={'cap': 'MO File Viewer', 'w': 920, 'h': 650, 'border': DBORDER_SIZE,
+        'w_min': 400,
+        'h_min': 330,
         'on_close': onclose})
         
         n = dlg_proc(self.hdlg, DLG_CTL_ADD, 'memo')
@@ -55,7 +57,7 @@ class Command:
             'align': ALIGN_BOTTOM,
             'sp_a': 10,
             'w': 450,
-            'h': 150,
+            'h': 100,
             'ex0': True,
         })
 
@@ -65,7 +67,7 @@ class Command:
             'align': ALIGN_BOTTOM,
             'sp_a': 10,
             'w': 450,
-            'h': 150,
+            'h': 100,
             'ex0': True,
         })
         
