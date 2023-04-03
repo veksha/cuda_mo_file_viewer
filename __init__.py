@@ -17,15 +17,14 @@ class Command:
         self.my_list = []
         
     def open_file(self):
-        try:
-            self.filename = dlg_file(True, '', '', '*.mo|*.mo', 'Please, provide path to .mo file')
+        self.filename = dlg_file(True, '', '', '*.mo|*.mo', 'Please, provide path to .mo file')
+        if self.filename:
             dlg_proc(self.hdlg, DLG_PROP_SET, prop={'cap': CAPTION + ' - ' + self.filename})
             translation = gettext.GNUTranslations(open(self.filename, 'rb'))
             self.messages = [str(n)+'\r'+k.replace('\t',chr(3))+'\r'+v.replace('\t',chr(3))+'\t' for n, (k, v) in enumerate(translation._catalog.items())]
             self.messages.insert(0,'Offset\rOriginal\rTranslation\t') # first row is column headers
             self.my_list = list(translation._catalog.items())
-        except:
-            print("MO File Viewer: exception occurred")
+        return self.filename
             
     def fill_data(self):
         dlg_proc(self.hdlg, DLG_CTL_PROP_SET, name='mylistview', prop={
@@ -97,8 +96,7 @@ class Command:
             
         self.filename = None
         def onbutton(*args, **kwargs):
-            self.open_file()
-            self.fill_data()
+            self.open_file() and self.fill_data()
             
         n = dlg_proc(self.hdlg, DLG_CTL_ADD, 'button')
         dlg_proc(self.hdlg, DLG_CTL_PROP_SET, index=n, prop={
