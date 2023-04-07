@@ -4,6 +4,9 @@ from cudax_lib import get_translation
 _ = get_translation(__file__)  # I18N
 
 CAPTION = _('MO File Viewer')
+CAP_OFFSET = _('Offset')
+CAP_ORIGINAL = _('Original')
+CAP_TRAN = _('Translation')
 
 import gettext
 
@@ -22,7 +25,7 @@ class Command:
             dlg_proc(self.hdlg, DLG_PROP_SET, prop={'cap': CAPTION + ' - ' + self.filename})
             translation = gettext.GNUTranslations(open(self.filename, 'rb'))
             self.messages = [str(n)+'\r'+k.replace('\t',chr(3))+'\r'+v.replace('\t',chr(3))+'\t' for n, (k, v) in enumerate(translation._catalog.items())]
-            self.messages.insert(0, _('Offset\rOriginal\rTranslation\t')) # first row is column headers
+            self.messages.insert(0, CAP_OFFSET+'\r'+CAP_ORIGINAL+'\r'+CAP_TRAN+'\t') # first row is column headers
             self.my_list = list(translation._catalog.items())
         return self.filename
 
@@ -30,9 +33,9 @@ class Command:
         dlg_proc(self.hdlg, DLG_CTL_PROP_SET, name='mylistview', prop={
             'items': ''.join(self.messages),
             'columns': '\t'.join([
-                '\r'.join([_('Offset'), '70','','','L']),
-                '\r'.join([_('Original'), '400']),
-                '\r'.join([_('Translation'), '400']),
+                '\r'.join([CAP_OFFSET, '70','','','L']),
+                '\r'.join([CAP_ORIGINAL, '400']),
+                '\r'.join([CAP_TRAN, '400']),
                 ]),
             })
         # Clear the memo panels when loading the (next) file
@@ -50,16 +53,20 @@ class Command:
             timer_proc(TIMER_START_ONE, lambda *args, **kwargs: dlg_proc(self.hdlg, DLG_FREE), 100)
 
         dlg_proc(self.hdlg, DLG_PROP_SET, prop={
-            'cap': CAPTION, 'w': 920, 'h': 650, 'border': DBORDER_SIZE,
+            'cap': CAPTION,
+            'w': 920,
+            'h': 650,
+            'border': DBORDER_SIZE,
             'w_min': 400,
             'h_min': 330,
-            'on_close': onclose})
+            'on_close': onclose,
+        })
 
         n = dlg_proc(self.hdlg, DLG_CTL_ADD, 'memo')
         dlg_proc(self.hdlg, DLG_CTL_PROP_SET, index=n, prop={
             'name': 'memo1',
             'align': ALIGN_BOTTOM,
-            'sp_a': 10,
+            'sp_a': 6,
             'w': 450,
             'h': 100,
             'ex0': True,
@@ -69,7 +76,7 @@ class Command:
         dlg_proc(self.hdlg, DLG_CTL_PROP_SET, index=n, prop={
             'name': 'memo2',
             'align': ALIGN_BOTTOM,
-            'sp_a': 10,
+            'sp_a': 6,
             'w': 450,
             'h': 100,
             'ex0': True,
@@ -86,12 +93,12 @@ class Command:
         dlg_proc(self.hdlg, DLG_CTL_PROP_SET, index=n, prop={
             'name': 'mylistview',
             'align': ALIGN_TOP,
-            'sp_a': 10,
+            'sp_a': 6,
             'a_b':('memo1','['),
             'columns': '\t'.join([
-                '\r'.join([_('Offset'), '70','','','L']),
-                '\r'.join([_('Original'), '400']),
-                '\r'.join([_('Translation'), '400']),
+                '\r'.join([CAP_OFFSET, '70','','','L']),
+                '\r'.join([CAP_ORIGINAL, '400']),
+                '\r'.join([CAP_TRAN, '400']),
                 ]),
             'on_select': onclick,
             })
@@ -105,7 +112,7 @@ class Command:
             'name': 'mybutton',
             'cap': _('Open...'),
             'align': ALIGN_TOP,
-            'sp_a': 10,
+            'sp_a': 6,
             'on_change': onbutton,
             })
 
