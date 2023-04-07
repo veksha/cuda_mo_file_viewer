@@ -1,0 +1,2 @@
+2023.04.07
++ add: i18n support (patch by Markus F.)
