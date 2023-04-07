@@ -20,11 +20,15 @@ class Command:
         self.my_list = []
 
     def open_file(self):
+
+        def _escape(s):
+            return s.replace('\t', chr(3)).replace('\r', '|')
+
         self.filename = dlg_file(True, '', '', '*.mo|*.mo', _('Please, provide path to .mo file'))
         if self.filename:
             dlg_proc(self.hdlg, DLG_PROP_SET, prop={'cap': CAPTION + ' - ' + self.filename})
             translation = gettext.GNUTranslations(open(self.filename, 'rb'))
-            self.messages = [str(n)+'\r'+k.replace('\t',chr(3))+'\r'+v.replace('\t',chr(3))+'\t' for n, (k, v) in enumerate(translation._catalog.items())]
+            self.messages = [str(n)+'\r'+_escape(k)+'\r'+_escape(v)+'\t' for n, (k, v) in enumerate(translation._catalog.items())]
             self.messages.insert(0, CAP_OFFSET+'\r'+CAP_ORIGINAL+'\r'+CAP_TRAN+'\t') # first row is column headers
             self.my_list = list(translation._catalog.items())
         return self.filename
